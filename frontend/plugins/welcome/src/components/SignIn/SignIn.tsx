@@ -3,17 +3,14 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
+//import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-import { Link as RouterLink } from 'react-router-dom';
+import Swal from 'sweetalert2'; // alert
 
 function Copyright() {
   return (
@@ -48,8 +45,58 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+interface Login {
+  email:    string;
+  password: string;
+
+}
+
 const SignIn: FC<{}> = () => {
   const classes = useStyles();
+  const [login, setLogin] = React.useState<Partial<Login>>({});
+
+  // alert setting
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: toast => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    },
+  });
+
+  function redirecLogin() {
+    if ((login.email == "b6009168@g.sut.ac.th" && login.password == "1234") ||
+      (login.email == "chanyeol@gmail.com" && login.password == "1111")
+    ) {
+      Toast.fire({
+        icon: 'success',
+        title: 'เข้าสู่ระบบสำเร็จ',
+      });
+      //redirec Page ... http://localhost:3000/MenuMed
+      window.location.href = "http://localhost:3000/MenuMed";
+      console.log("LOGIN TO Medical File System");
+    } else {
+      Toast.fire({
+        icon: 'error',
+        title: 'Email หรือ Password ไม่ถูกต้อง',
+      });
+    }
+
+  }
+
+  const handleChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>,
+  ) => {
+    const name = event.target.name as keyof typeof login;
+    const { value } = event.target;
+    setLogin({ ...login, [name]: value });
+    console.log(login);
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -71,6 +118,8 @@ const SignIn: FC<{}> = () => {
             name="email"
             autoComplete="email"
             autoFocus
+            value={login.email || ""}
+            onChange={handleChange}
           />
           <TextField
             variant="outlined"
@@ -82,18 +131,18 @@ const SignIn: FC<{}> = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={login.password || ""}
+              onChange={handleChange}
           />
           
           <Button
-            type="submit"
-            fullWidth
-            href="/MenuMed"
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={redirecLogin}
+            >
+              Sign In
+            </Button>
 
          
         </form>
