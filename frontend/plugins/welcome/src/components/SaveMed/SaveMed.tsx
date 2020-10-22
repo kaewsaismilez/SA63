@@ -285,7 +285,7 @@ const SaveMed: FC<{}> = () => {
                 บันทึกประวัติทันตกรรม
               </Button>
               &emsp;
-              <Link component={RouterLink} to="/ShowMed">
+              <Link component={RouterLink} to="/MenuMed">
               <Button
                 variant="contained"
                 color="default"
